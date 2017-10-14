@@ -3,6 +3,7 @@
 import loader
 import tensorflow as tf
 import numpy as np
+import argparse
 import os
 from tensorflow.python.framework import ops
 import matplotlib.pyplot as plt
@@ -312,8 +313,14 @@ class Model():
     plt.show(imgplot)
 
   def train(self, restore=False, path=None):
+    
+    if not self.is_training:
+      print("This model not able for train...")
+      print("Create a new model with arg is_inference equal to false")
+      exit()
+
     graph_path = "graph/" + path
-    weights_path = "weights/" + path
+    weights_path = "weights/decoder-" + path
 
     if not os.path.exists(graph_path):
       os.mkdir(graph_path)
@@ -322,7 +329,7 @@ class Model():
       os.mkdir(weights_path)
 
     # create tensorboard instance
-    writer = SummaryWriter(graph_path)
+    writer = SummaryWriter(graph_path, self.sess.graph)
     saver = tf.train.Saver()
 
     if restore is True:
@@ -361,7 +368,7 @@ class Model():
         errD_real = self.d_loss_real.eval(session=self.sess, feed_dict={self.images: batch_x})
         errD = (errD_real+errD_fake)/2.
         errG = self.g_loss.eval(session=self.sess)
-        save_path = saver.save(self.sess, weights_path)
+        save_path = saver.save(self.sess, weights_path + "/model")
 
         if epoch%1 == 0:
             print("At epoch {0}".format(epoch+1))
@@ -370,10 +377,36 @@ class Model():
             print("\n")
 
 
+def main():
+  parser = argparse.ArgumentParser()
+  parser.add_argument("image_len",  help="Number of images [0,202599]", type=int)
+  parser.add_argument("batch_size", help="Batch size", type=int)
+  parser.add_argument("epochs", help="Number of epoch", type=int)
+  parser.add_argument("is_inference", help="Boolean that say if is inference or not", type=str)
+  parser.add_argument("model_name", help="Name of model that will be save", type=str)
+
+  print('Model config\n')
+  args = parser.parse_args()
+  
+  if args.is_inference == "True":
+    args.is_inference = True
+  else:
+    args.is_inference = False
+
+  print('images len:', args.image_len)
+  print('batch size:', args.batch_size)
+  print('epochs:', args.epochs)
+  print('inference:', args.is_inference)
+  print('path:', args.model_name, "\n")
+
+  images = loader.get_celeb()[:args.image_len]
+  model = Model(images, batch_size=args.batch_size,
+    epochs=args.epochs, is_inference=args.is_inference)
+  model.train(path=args.model_name)
+
+
 if __name__ == '__main__':
-  images = loader.get_celeb()
-  model = Model(images[64], batch_size=64, epochs=5, is_inference=False)
-  model.train(path="test1")
+  main()
 
 
 
