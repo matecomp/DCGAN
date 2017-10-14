@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Don't push
+large_files/*
+
 # Distribution / packaging
 .Python
 env/
@@ -20,7 +23,6 @@ lib64/
 parts/
 sdist/
 var/
-large_files/
 wheels/
 *.egg-info/
 .installed.cfg
