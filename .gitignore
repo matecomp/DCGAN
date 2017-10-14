@@ -8,6 +8,8 @@ __pycache__/
 
 # Don't push
 large_files/*
+dcgan_celeb/graph/*
+dcgan_celeb/weights/*
 
 # Distribution / packaging
 .Python
