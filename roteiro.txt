@@ -1,0 +1,39 @@
+Motivação
+Explicar GAN's
+Explicar as manipulações possíveis nos novos dados
+Como é feita a avaliação sobre esses dados gerados
+Como saber se os dados gerados fazem sentido
+Como avaliar se os dados gerados pelo modelo gerador são próprios para o treino de outra rede
+Quais métricas de avaliação o trabalho utiliza
+É necessário um humano para verificar a qualidade desses dados
+
+
+
+
+
+
+
+Motivação:
+Algoritmos de aprendizado são cada vez mais requisitados e consequentemente há uma maior demanda por dados. Para suprir essa demanda empresas investem massivamente em métodos para obter informações, pois grande parte dos modelos atuais exigem uma base de dados catalogada, ou seja uma base que seja analisada por um humano, o que restringe a quantidade de dados disponíveis.
+
+Este projeto tem como objetivo estudar a automação do processo de catalogar e gerar novos dados usando redes adversariais.
+
+(*Cuidado) Este método se destaca em relação às redes neurais comum pelo fato de se obter uma compreensão mais profunda da base de dados, visto que para gerar um novo exemplo exige um maior conhecimento da base dados que apenas classificar.
+
+Explicar GAN's:
+Redes adversariais são treinadas da seguinte forma: utilizam-se dois modelos Gerador(G) e Discriminador(D). O gerador G tem como objetivo gerar cópias do dataset enquanto o discriminador D tem como objetivo avaliar, dado um exemplo, se ele é uma cópia ou não, ou seja, se o exemplo veio do conjunto de dados ou se foi criado por G. Assim, cada modelo competem entre si, pois caso G tenha bons resultados, D terá resultados ruins e vice versa. 
+
+Explicar a base de dados:
+Para treinar o modelo, inicialmente foi utilizada a base dados chamada “CelebA” que consiste em fotos dos rostos de 200600 celebridades e um vetor de 40 dimensões para cada celebridade indicando as características presentes no rosto.
+
+Explicar as manipulações possíveis nos novos dados:
+É possível aplicar características em uma nova imagem como cor de cabelo, sorriso e etc. Sendo possível também quantificar cada característica de uma imagem. Através de operações neste espaço vetorial.
+
+Como é feita a avaliação sobre esses dados gerados?
+Existe uma distribuição que representa o dataset original que é desconhecida, o objetivo da rede é obter uma distribuição que seja próxima da distribuição original, ou seja, obter uma distribuição que represente o banco de dados. Logo para avaliar este modelo é necessário ter uma métrica que compare os dados originais com os dados gerados.
+O ideal seria utilizar a divergência KL para comparar a distribuição do dataset com a distribuição gerada pela rede, porém não temos a distribuição original, afinal é o que queremos descobrir. Então para avaliar a precisão dos dados gerados, foi utilizada uma métrica chamada chi square que calcula a distância entre o histograma médio do banco de dados original com o histograma médio do conjunto gerado. O histograma é calculado a partir de uma amostra da distribuição original e uma amostra da distribuição obtida, para cada amostra calcule a média dos histogramas e calcule o chi square.
+
+
+Como saber se os dados gerados fazem sentido?
+Este treinamento gera somente novos exemplos não catalogados. Para catalogar este conjunto novo de dados é necessário treinar uma outra rede que faz o papel inverso da rede G, ou seja, ao invés de receber um vetor e gerar um exemplo, essa rede recebe um exemplo e gera um novo vetor chamaremos essa rede de Decoder D. 
+Fazemos isso pois queremos catalogar novos exemplos que estão representados na forma vetorial, então precisamos representar o próprio banco de dados catalogado na forma vetorial também. Uma vez obtido vetores catalogados e vetores não catalogados podemos usar diversos algoritmos para classificar os vetores que ainda não possuem classe tais como KNN, K-Means e Similaridade de cosseno.
