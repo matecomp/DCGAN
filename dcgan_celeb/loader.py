@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 """ Aviso: este future print e division permite que o codigo funcione
     tanto em python3 quanto em python 2.x"""
 from __future__ import print_function, division
@@ -78,7 +80,7 @@ def crop_and_resave(inputfile, outputdir):
 
 # Escalar os valores de [0,255] para [-1,1]
 def scale_image(im):
-  return (im / 255.0)*2 - 1
+  return (im - 128.0)/127.
 
 # Fara a leitura de cada aquivo de imagem e salvar numa lista
 def files2images(filenames):
@@ -89,7 +91,7 @@ def files2images(filenames):
 
 
 # funcoes para fazer download no google drive
-# essas funcoes foram feitas pelo Lazyprogrammer
+### as funcoes abaixo foram feitas pelo Lazyprogrammer
 def save_response_content(r, dest):
   # unfortunately content-length is not provided in header
   total_iters = 1409659 # in KB
